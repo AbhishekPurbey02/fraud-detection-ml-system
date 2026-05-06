@@ -17,9 +17,31 @@ with open(model_path, "rb") as file:
 with open(scaler_path, "rb") as file:
     scaler = pickle.load(file)
 
+feature_names = [
+    "Time",
+    "V1", "V2", "V3", "V4", "V5", "V6", "V7",
+    "V8", "V9", "V10", "V11", "V12", "V13", "V14",
+    "V15", "V16", "V17", "V18", "V19", "V20", "V21",
+    "V22", "V23", "V24", "V25", "V26", "V27", "V28",
+    "Amount"
+]
+@app.route("/features", methods=["GET"])
+def features():
+    return jsonify({
+        "feature_count": len(feature_names),
+        "features": feature_names
+    })
+@app.route("/health", methods=["GET"])
+def health():
+    return jsonify({
+        "status": "ok",
+        "model_loaded": model is not None,
+        "scaler_loaded": scaler is not None
+    })
 @app.route("/")
 def home():
     return "Fraud Detection Backend is running!"
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
