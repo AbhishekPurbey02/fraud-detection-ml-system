@@ -7,9 +7,15 @@ app = Flask(__name__)
 # Get path of the saved model
 model_path = os.path.join(os.path.dirname(__file__), "..", "models", "fraud_model.pkl")
 
+scaler_path = os.path.join(os.path.dirname(__file__), "..", "models", "scaler.pkl")
+
 # Load trained Random Forest model
 with open(model_path, "rb") as file:
     model = pickle.load(file)
+
+# Load fitted RobustScaler
+with open(scaler_path, "rb") as file:
+    scaler = pickle.load(file)
 
 @app.route("/")
 def home():
@@ -33,6 +39,8 @@ def predict():
         })
     
     features_array = np.array(features).reshape(1, -1)
+    # Scale only Time and Amount columns
+    features_array[:,[0,29]] = scaler.transform(features_array[:,[0,29]])
     prediction = model.predict(features_array)[0]
 
     if prediction == 1:
