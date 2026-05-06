@@ -24,23 +24,32 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json()
-    
+    if data is None:
+        return jsonify({
+            "error": "No JSON data received"
+        }), 400
     features = data.get("features")
 
     if features is None:
         return jsonify({
             "error": "No features provided"
-        })
+        }), 400
     
     if len(features) !=30:
         return jsonify({
             "error": "Model expects exactly 30 features",
             "received": len(features)
-        })
-    
-    features_array = np.array(features).reshape(1, -1)
+        }), 400
+    try:
+        features_array = np.array(features, dtype=float).reshape(1, -1)
+    except ValueError:
+        return jsonify({
+            "error": "All features must be numeric values"
+        }), 400
+
     # Scale only Time and Amount columns
     features_array[:,[0,29]] = scaler.transform(features_array[:,[0,29]])
+    fraud_probability = model.predict_proba(features_array)[0][1]
     prediction = model.predict(features_array)[0]
 
     if prediction == 1:
@@ -50,7 +59,9 @@ def predict():
 
     return jsonify({
         "prediction": int(prediction),
-        "result": result
+        "result": result,
+        "fraud_probability": round(float(fraud_probability),4),
+        "risk_percentage": round(float(fraud_probability)*100,2)
     })
 
 if __name__ == "__main__":
