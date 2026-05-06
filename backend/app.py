@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import pickle
 import os
+import numpy as np 
 
 app = Flask(__name__)
 # Get path of the saved model
@@ -17,10 +18,31 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json()
+    
+    features = data.get("features")
+
+    if features is None:
+        return jsonify({
+            "error": "No features provided"
+        })
+    
+    if len(features) !=30:
+        return jsonify({
+            "error": "Model expects exactly 30 features",
+            "received": len(features)
+        })
+    
+    features_array = np.array(features).reshape(1, -1)
+    prediction = model.predict(features_array)[0]
+
+    if prediction == 1:
+        result = "Fraud Transaction"
+    else:
+        result = "Safe Transaction"
 
     return jsonify({
-        "received_data": data,
-        "message": "Data received successfully"
+        "prediction": int(prediction),
+        "result": result
     })
 
 if __name__ == "__main__":
