@@ -34,8 +34,12 @@ class _BackendCheckPageState extends State<BackendCheckPage> {
   String statusMessage = 'Backend not checked yet';
 
   Future<void> checkBackendHealth() async {
-    final url = Uri.parse('http://127.0.0.1:5000/health');
+  setState(() {
+    statusMessage = 'Checking backend...';
+  });
 
+  try {
+    final url = Uri.parse('http://127.0.0.1:5000/health');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -50,7 +54,12 @@ class _BackendCheckPageState extends State<BackendCheckPage> {
         statusMessage = 'Backend error: ${response.statusCode}';
       });
     }
+  } catch (error) {
+    setState(() {
+      statusMessage = 'Connection failed:\n$error';
+    });
   }
+}
 
   @override
   Widget build(BuildContext context) {

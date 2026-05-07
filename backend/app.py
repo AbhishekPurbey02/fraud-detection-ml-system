@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pickle
 import os
 import numpy as np 
 
 app = Flask(__name__)
+CORS(app)
 # Get path of the saved model
 model_path = os.path.join(os.path.dirname(__file__), "..", "models", "fraud_model.pkl")
 
