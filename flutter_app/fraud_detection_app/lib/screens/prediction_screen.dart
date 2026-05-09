@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:fraud_detection_app/widgets/demo_prediction_tab.dart';
+import 'package:fraud_detection_app/widgets/manual_input_tab.dart';
+import 'package:fraud_detection_app/widgets/prediction_result_card.dart';
 import '../services/fraud_api_service.dart';
 import '../data/sample_transactions.dart';
 
@@ -79,186 +82,34 @@ class _PredictionScreenState extends State<PredictionScreen> {
           title: const Text('Transaction Prediction'),
           backgroundColor: Colors.white,
           bottom: const TabBar(
-            tabs: [Tab(text: 'Demo Sample'), Tab(text: 'Manual Input')],
+            tabs: [Tab(text: 'DEMO SAMPLE'), Tab(text: 'MANUAL INPUT')],
           ),
         ),
         body: TabBarView(
           children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(28),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 720),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Choose Transaction Sample',
-                        style: Theme.of(
-                          context,
-                        ).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: const Color(0xFF111827),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        selectedSample,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: const Color(0xFF4B5563),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          OutlinedButton.icon(
-                            onPressed:
-                                () => selectSample(
-                                  'Safe sample selected',
-                                  'safe',
-                                  safeTransactionSample,
-                                ),
-                            icon: const Icon(Icons.verified_user),
-                            label: const Text('Safe Sample'),
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor:
-                                  isSafeSelected
-                                      ? const Color(0xFFE8F5E9)
-                                      : Colors.transparent,
-                              foregroundColor:
-                                  isSafeSelected
-                                      ? const Color(0xFF1B5E20)
-                                      : const Color(0xFF253B80),
-                              side: BorderSide(
-                                color:
-                                    isSafeSelected
-                                        ? const Color(0xFF2E7D32)
-                                        : const Color(0xFF9CA3AF),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          OutlinedButton.icon(
-                            onPressed:
-                                () => selectSample(
-                                  'Fraud sample selected',
-                                  'fraud',
-                                  fraudTransactionSample,
-                                ),
-                            icon: const Icon(Icons.warning),
-                            label: const Text('Fraud Sample'),
-                            style: OutlinedButton.styleFrom(
-                              backgroundColor:
-                                  isFraudSelected
-                                      ? const Color(0xFFFFEBEE)
-                                      : Colors.transparent,
-                              foregroundColor:
-                                  isFraudSelected
-                                      ? const Color(0xFFB71C1C)
-                                      : const Color(0xFF253B80),
-                              side: BorderSide(
-                                color:
-                                    isFraudSelected
-                                        ? const Color(0xFFD32F2F)
-                                        : const Color(0xFF9CA3AF),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 28),
-                      FilledButton(
-                        onPressed: predictTransaction,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: const Color(0xFF253B80),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 28,
-                            vertical: 16,
-                          ),
-                        ),
-                        child: const Text('Predict Transaction'),
-                      ),
-                      const SizedBox(height: 24),
-                      if (isLoading)
-                        const Text('Predicting transaction...')
-                      else if (errorMessage.isNotEmpty)
-                        Text(
-                          errorMessage,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.bodyLarge?.copyWith(
-                            color: Colors.red,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      else if (predictionLabel != null &&
-                          riskPercentage != null)
-                        Builder(
-                          builder: (context) {
-                            final isFraud =
-                                predictionLabel == 'Fraud Transaction';
-
-                            final backgroundColor =
-                                isFraud
-                                    ? const Color(0xFFFFEBEE)
-                                    : const Color(0xFFE8F5E9);
-
-                            final borderColor =
-                                isFraud
-                                    ? const Color(0xFFD32F2F)
-                                    : const Color(0xFF2E7D32);
-
-                            final textColor =
-                                isFraud
-                                    ? const Color(0xFFB71C1C)
-                                    : const Color(0xFF1B5E20);
-
-                            return Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: backgroundColor,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: borderColor),
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    predictionLabel!,
-                                    textAlign: TextAlign.center,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.titleLarge?.copyWith(
-                                      color: textColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    'Risk Score: ${riskPercentage!.toStringAsFixed(0)}%',
-                                    textAlign: TextAlign.center,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge?.copyWith(
-                                      color: textColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                    ],
+            DemoPredictionTab(
+              selectedSample: selectedSample,
+              isSafeSelected: isSafeSelected,
+              isFraudSelected: isFraudSelected,
+              isLoading: isLoading,
+              errorMessage: errorMessage,
+              predictionLabel: predictionLabel,
+              riskPercentage: riskPercentage,
+              onSelectSafe:
+                  () => selectSample(
+                    'Safe sample selected',
+                    'safe',
+                    safeTransactionSample,
                   ),
-                ),
-              ),
+              onSelectFraud:
+                  () => selectSample(
+                    'Fraud sample selected',
+                    'fraud',
+                    fraudTransactionSample,
+                  ),
+              onPredict: predictTransaction,
             ),
-
-            const Center(child: Text('Manual input form will be added here')),
+            const ManualInputTab(),
           ],
         ),
       ),
