@@ -27,6 +27,26 @@ class DashboardScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Fraud Dashboard'),
         backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+            onPressed: () {
+              PredictionHistoryService.clear();
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Prediction history cleared')),
+              );
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DashboardScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.delete_outline),
+            tooltip: 'Clear history',
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
