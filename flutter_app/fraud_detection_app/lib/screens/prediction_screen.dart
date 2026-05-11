@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fraud_detection_app/widgets/demo_prediction_tab.dart';
 import 'package:fraud_detection_app/widgets/manual_input_tab.dart';
-import 'package:fraud_detection_app/widgets/prediction_result_card.dart';
 import '../services/fraud_api_service.dart';
 import '../data/sample_transactions.dart';
+import '../models/prediction_record.dart';
+import '../services/prediction_history_service.dart';
+import '../models/prediction_record.dart';
+import '../services/prediction_history_service.dart';
 
 class PredictionScreen extends StatefulWidget {
   const PredictionScreen({super.key});
@@ -60,6 +63,22 @@ class _PredictionScreenState extends State<PredictionScreen> {
         predictionLabel = result["result"];
         riskPercentage = (result["risk_percentage"] as num).toDouble();
         isLoading = false;
+        PredictionHistoryService.addRecord(
+          PredictionRecord(
+            source: selectedSample,
+            result: predictionLabel!,
+            riskPercentage: riskPercentage!,
+            createdAt: DateTime.now(),
+          ),
+        );
+        PredictionHistoryService.addRecord(
+          PredictionRecord(
+            source: 'Manual Input',
+            result: predictionLabel!,
+            riskPercentage: riskPercentage!,
+            createdAt: DateTime.now(),
+          ),
+        );
       });
     } catch (error) {
       setState(() {
