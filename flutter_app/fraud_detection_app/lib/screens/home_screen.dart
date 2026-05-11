@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'prediction_screen.dart';
+import 'dashboard_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -8,6 +9,13 @@ class HomeScreen extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const PredictionScreen()),
+    );
+  }
+
+  void openDashboard(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const DashboardScreen()),
     );
   }
 
@@ -61,6 +69,18 @@ class HomeScreen extends StatelessWidget {
                       vertical: 16,
                     ),
                   ),
+                ),
+                const SizedBox(height: 12),
+                OutlinedButton(
+                  onPressed: () => openDashboard(context),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: const Color(0xFF253B80),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 28,
+                      vertical: 16,
+                    ),
+                  ),
+                  child: const Text('View Dashboard'),
                 ),
               ],
             );
