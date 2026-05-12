@@ -102,6 +102,84 @@ class DashboardScreen extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             Text(
+              'Fraud Alerts',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF111827),
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (fraudAlerts.isEmpty)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFFE5E7EB)),
+                ),
+                child: const Text('No fraud alerts yet.'),
+              )
+            else
+              Column(
+                children:
+                    fraudAlerts.reversed.map((record) {
+                      final statusColor =
+                          record.reviewed
+                              ? const Color(0xFF2E7D32)
+                              : const Color(0xFFF59E0B);
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: const Color(0xFFFFCDD2)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.warning, color: Color(0xFFD32F2F)),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    record.source,
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: const Color(0xFF111827),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Risk: ${record.riskPercentage.toStringAsFixed(0)}%',
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.bodyMedium?.copyWith(
+                                      color: const Color(0xFF6B7280),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              record.reviewed ? 'Reviewed' : 'Pending',
+                              style: TextStyle(
+                                color: statusColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+              ),
+
+            Text(
               'Recent Predictions',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
