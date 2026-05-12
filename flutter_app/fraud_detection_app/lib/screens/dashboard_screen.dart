@@ -173,6 +173,22 @@ class DashboardScreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            const SizedBox(width: 12),
+                            if (!record.reviewed)
+                              TextButton(
+                                onPressed: () {
+                                  PredictionHistoryService.markReviewed(record);
+
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => const DashboardScreen(),
+                                    ),
+                                  );
+                                },
+                                child: const Text('Mark Reviewed'),
+                              ),
                           ],
                         ),
                       );
