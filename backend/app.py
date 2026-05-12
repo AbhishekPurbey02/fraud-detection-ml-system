@@ -4,12 +4,19 @@ import pickle
 import os
 import numpy as np 
 from database import init_db
-
+from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
 
-init_db()
+from database import (
+    init_db,
+    insert_prediction,
+    get_predictions,
+    mark_prediction_reviewed,
+    clear_predictions,
+)
+
 # Get path of the saved model
 model_path = os.path.join(os.path.dirname(__file__), "..", "models", "fraud_model.pkl")
 
@@ -85,12 +92,51 @@ def predict():
     else:
         result = "Safe Transaction"
 
+    created_at = datetime.now().isoformat()
+    source = data.get("source", "API Prediction")
+
+    prediction_id = insert_prediction(
+        source=source,
+        result=result,
+        risk_percentage=round(float(fraud_probability) * 100, 2),
+        created_at=created_at
+    )
+
     return jsonify({
+        "id": prediction_id,
+        "source": source,
         "prediction": int(prediction),
         "result": result,
         "fraud_probability": round(float(fraud_probability),4),
-        "risk_percentage": round(float(fraud_probability)*100,2)
+        "risk_percentage": round(float(fraud_probability)*100,2),
+        "created_at": created_at
     })
+
+@app.route("/predictions", methods=["GET"])
+def predictions():
+    return jsonify({
+        "predictions": get_predictions()
+    })
+
+
+@app.route("/predictions/<int:prediction_id>/review", methods=["PATCH"])
+def review_prediction(prediction_id):
+    mark_prediction_reviewed(prediction_id)
+
+    return jsonify({
+        "message": "Prediction marked as reviewed",
+        "id": prediction_id
+    })
+
+
+@app.route("/predictions", methods=["DELETE"])
+def delete_predictions():
+    clear_predictions()
+
+    return jsonify({
+        "message": "Prediction history cleared"
+    })
+
 
 if __name__ == "__main__":
     app.run(debug=True)
