@@ -3,9 +3,13 @@ from flask_cors import CORS
 import pickle
 import os
 import numpy as np 
+from database import init_db
+
 
 app = Flask(__name__)
 CORS(app)
+
+init_db()
 # Get path of the saved model
 model_path = os.path.join(os.path.dirname(__file__), "..", "models", "fraud_model.pkl")
 
