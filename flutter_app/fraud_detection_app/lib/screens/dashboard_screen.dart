@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../models/prediction_record.dart';
 import '../services/prediction_history_service.dart';
 import '../widgets/dashboard_stat_card.dart';
 
@@ -9,7 +8,9 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final records = PredictionHistoryService.getRecords();
-
+    final fraudAlerts = records.where((record) => record.isFraud).toList();
+    final pendingAlerts =
+        fraudAlerts.where((record) => !record.reviewed).length;
     final total = records.length;
     final fraudCount = records.where((record) => record.isFraud).length;
     final safeCount = total - fraudCount;
@@ -91,6 +92,11 @@ class DashboardScreen extends StatelessWidget {
                   title: 'Average Risk',
                   value: '${averageRisk.toStringAsFixed(1)}%',
                   color: const Color(0xFF7C3AED),
+                ),
+                DashboardStatCard(
+                  title: 'Pending Alerts',
+                  value: pendingAlerts.toString(),
+                  color: const Color(0xFFF59E0B),
                 ),
               ],
             ),

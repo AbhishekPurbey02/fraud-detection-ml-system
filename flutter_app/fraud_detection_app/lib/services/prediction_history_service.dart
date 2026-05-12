@@ -14,4 +14,14 @@ class PredictionHistoryService {
   static void clear() {
     _records.clear();
   }
+
+  static void markReviewed(PredictionRecord record) {
+    final index = _records.indexOf(record);
+
+    if (index == -1) {
+      return;
+    }
+
+    _records[index] = record.copyWith(reviewed: true);
+  }
 }
