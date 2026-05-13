@@ -3,8 +3,6 @@ import 'package:fraud_detection_app/widgets/demo_prediction_tab.dart';
 import 'package:fraud_detection_app/widgets/manual_input_tab.dart';
 import '../services/fraud_api_service.dart';
 import '../data/sample_transactions.dart';
-import '../models/prediction_record.dart';
-import '../services/prediction_history_service.dart';
 
 class PredictionScreen extends StatefulWidget {
   const PredictionScreen({super.key});
