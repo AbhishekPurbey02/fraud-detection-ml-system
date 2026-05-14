@@ -1,13 +1,54 @@
 import 'package:flutter/material.dart';
-import '../services/prediction_history_service.dart';
+import 'package:fraud_detection_app/models/prediction_record.dart';
+import 'package:fraud_detection_app/services/fraud_api_service.dart';
 import '../widgets/dashboard_stat_card.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  final FraudApiService apiService = FraudApiService();
+
+  List<PredictionRecord> records = [];
+  bool isLoading = true;
+  String errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadPredictions();
+  }
+
+  Future<void> loadPredictions() async {
+    try {
+      final loadedRecords = await apiService.getPredictions();
+
+      setState(() {
+        records = loadedRecords;
+        isLoading = false;
+        errorMessage = '';
+      });
+    } catch (error) {
+      setState(() {
+        errorMessage = 'Error: $error';
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final records = PredictionHistoryService.getRecords();
+     if (isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (errorMessage.isNotEmpty) {
+      return Scaffold(body: Center(child: Text(errorMessage)));
+    }
     final fraudAlerts = records.where((record) => record.isFraud).toList();
     final pendingAlerts =
         fraudAlerts.where((record) => !record.reviewed).length;
@@ -22,7 +63,6 @@ class DashboardScreen extends StatelessWidget {
                     .map((record) => record.riskPercentage)
                     .reduce((a, b) => a + b) /
                 total;
-
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FC),
       appBar: AppBar(
@@ -30,19 +70,15 @@ class DashboardScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         actions: [
           IconButton(
-            onPressed: () {
-              PredictionHistoryService.clear();
+            onPressed: () async {
+              await apiService.clearPredictions();
+
+              await loadPredictions();
 
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Prediction history cleared')),
               );
 
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DashboardScreen(),
-                ),
-              );
             },
             icon: const Icon(Icons.delete_outline),
             tooltip: 'Clear history',
@@ -176,16 +212,13 @@ class DashboardScreen extends StatelessWidget {
                             const SizedBox(width: 12),
                             if (!record.reviewed)
                               TextButton(
-                                onPressed: () {
-                                  PredictionHistoryService.markReviewed(record);
-
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) => const DashboardScreen(),
-                                    ),
+                                onPressed: () async {
+                                  await apiService.markPredictionReviewed(
+                                    record.id,
                                   );
+
+                                  await loadPredictions();
+
                                 },
                                 child: const Text('Mark Reviewed'),
                               ),
