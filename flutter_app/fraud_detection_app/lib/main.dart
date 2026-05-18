@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screens/home_screen.dart';
-
+import 'package:fraud_detection_app/screens/login_screen.dart';
+import 'screens/login_screen.dart';
 void main() {
   runApp(const FraudDetectionApp());
 }
@@ -17,7 +17,7 @@ class FraudDetectionApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const LoginScreen(),
     );
   }
 }
