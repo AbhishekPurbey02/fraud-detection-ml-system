@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fraud_detection_app/screens/login_screen.dart';
 import 'prediction_screen.dart';
 import 'dashboard_screen.dart';
 
@@ -22,6 +23,21 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Fraud Detection Platform'),
+        backgroundColor: Colors.white,
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
+            },
+            child: const Text('Logout'),
+          ),
+        ],
+      ),
       backgroundColor: Colors.white,
       body: SafeArea(
         child: LayoutBuilder(
