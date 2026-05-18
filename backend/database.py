@@ -25,8 +25,19 @@ def init_db():
             created_at TEXT NOT NULL
         )
 """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL,
+            role TEXT NOT NULL DEFAULT 'analyst',
+            created_at TEXT NOT NULL
+        )
+    """)
     connection.commit()
     connection.close()
+
 def insert_prediction(source, result, risk_percentage, created_at):
     connection = get_connection()
     cursor = connection.cursor()
@@ -81,4 +92,38 @@ def clear_predictions():
 
     connection.commit()
     connection.close()
+
+def create_user(name, email, password_hash, role, created_at):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        INSERT INTO users (name, email, password_hash, role, created_at)
+        VALUES (?, ?, ?, ?, ?)
+    """, (name, email, password_hash, role, created_at))
+
+    connection.commit()
+    user_id = cursor.lastrowid
+    connection.close()
+
+    return user_id
+
+
+def get_user_by_email(email):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT id, name, email, password_hash, role, created_at
+        FROM users
+        WHERE email = ?
+    """, (email,))
+
+    row = cursor.fetchone()
+    connection.close()
+
+    if row is None:
+        return None
+
+    return dict(row)
 
