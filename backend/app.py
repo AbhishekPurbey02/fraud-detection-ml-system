@@ -4,6 +4,7 @@ import pickle
 import os
 import numpy as np 
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 CORS(app)
@@ -14,6 +15,8 @@ from database import (
     get_predictions,
     mark_prediction_reviewed,
     clear_predictions,
+    create_user,
+    get_user_by_email,
 )
 
 # Get path of the saved model
@@ -136,6 +139,79 @@ def delete_predictions():
         "message": "Prediction history cleared"
     })
 
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.get_json()
+
+    if data is None:
+        return jsonify({"error": "No JSON data received"}), 400
+
+    name = data.get("name")
+    email = data.get("email")
+    password = data.get("password")
+    role = data.get("role", "analyst")
+
+    if not name or not email or not password:
+        return jsonify({"error": "Name, email, and password are required"}), 400
+
+    existing_user = get_user_by_email(email)
+    if existing_user is not None:
+        return jsonify({"error": "User already exists"}), 409
+
+    password_hash = generate_password_hash(password)
+    created_at = datetime.now().isoformat()
+
+    user_id = create_user(
+        name=name,
+        email=email,
+        password_hash=password_hash,
+        role=role,
+        created_at=created_at
+    )
+
+    return jsonify({
+        "message": "User registered successfully",
+        "user": {
+            "id": user_id,
+            "name": name,
+            "email": email,
+            "role": role,
+            "created_at": created_at
+        }
+    }), 201
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.get_json()
+
+    if data is None:
+        return jsonify({"error": "No JSON data received"}), 400
+
+    email = data.get("email")
+    password = data.get("password")
+
+    if not email or not password:
+        return jsonify({"error": "Email and password are required"}), 400
+
+    user = get_user_by_email(email)
+
+    if user is None:
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    if not check_password_hash(user["password_hash"], password):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    return jsonify({
+        "message": "Login successful",
+        "user": {
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"],
+            "role": user["role"],
+            "created_at": user["created_at"]
+        }
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)
