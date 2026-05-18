@@ -6,9 +6,6 @@ import numpy as np
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
-app = Flask(__name__)
-CORS(app)
-init_db()
 from database import (
     init_db,
     insert_prediction,
@@ -18,6 +15,10 @@ from database import (
     create_user,
     get_user_by_email,
 )
+app = Flask(__name__)
+CORS(app)
+init_db()
+
 
 # Get path of the saved model
 model_path = os.path.join(os.path.dirname(__file__), "..", "models", "fraud_model.pkl")

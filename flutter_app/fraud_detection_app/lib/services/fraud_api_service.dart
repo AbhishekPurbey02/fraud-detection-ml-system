@@ -5,12 +5,15 @@ import '../models/prediction_record.dart';
 class FraudApiService {
   final String baseUrl = 'http://127.0.0.1:5000';
 
-  Future<Map<String, dynamic>> predictTransaction(List<double> features, {String source = 'API Prediction'}) async {
+  Future<Map<String, dynamic>> predictTransaction(
+    List<double> features, {
+    String source = 'API Prediction',
+  }) async {
     final url = Uri.parse('$baseUrl/predict');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'features': features,'source': source,}),
+      body: jsonEncode({'features': features, 'source': source}),
     );
 
     final data = jsonDecode(response.body);
@@ -58,6 +61,55 @@ class FraudApiService {
 
     if (response.statusCode != 200) {
       throw Exception(data['error'] ?? 'Failed to clear predictions');
+    }
+  }
+
+  Future<Map<String, dynamic>> registerUser({
+    required String name,
+    required String email,
+    required String password,
+    String role = 'analyst',
+  }) async {
+    final url = Uri.parse('$baseUrl/register');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': name,
+        'email': email,
+        'password': password,
+        'role': role,
+      }),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 201) {
+      return data;
+    } else {
+      throw Exception(data['error'] ?? 'Registration failed');
+    }
+  }
+
+  Future<Map<String, dynamic>> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    final url = Uri.parse('$baseUrl/login');
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email, 'password': password}),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return data;
+    } else {
+      throw Exception(data['error'] ?? 'Login failed');
     }
   }
 }
