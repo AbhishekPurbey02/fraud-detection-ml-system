@@ -3,12 +3,10 @@ from flask_cors import CORS
 import pickle
 import os
 import numpy as np 
-from database import init_db
 from datetime import datetime
 
 app = Flask(__name__)
 CORS(app)
-
 init_db()
 from database import (
     init_db,
