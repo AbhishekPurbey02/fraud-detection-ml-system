@@ -20,6 +20,13 @@ class _LoginScreenState extends State<LoginScreen> {
   String errorMessage = '';
 
   Future<void> login() async {
+    if (emailController.text.trim().isEmpty ||
+        passwordController.text.trim().isEmpty) {
+      setState(() {
+        errorMessage = 'Email and password are required.';
+      });
+      return;
+    }
     setState(() {
       isLoading = true;
       errorMessage = '';

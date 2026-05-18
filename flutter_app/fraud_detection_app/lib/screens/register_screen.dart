@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'login_screen.dart';
 import '../services/fraud_api_service.dart';
 
-class RegisterScreen  extends StatefulWidget {
-  const RegisterScreen ({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen > createState() => _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen > {
+class _RegisterScreenState extends State<RegisterScreen> {
   final FraudApiService apiService = FraudApiService();
 
   final nameController = TextEditingController();
@@ -20,6 +20,21 @@ class _RegisterScreenState extends State<RegisterScreen > {
   String errorMessage = '';
 
   Future<void> register() async {
+    if (nameController.text.trim().isEmpty ||
+        emailController.text.trim().isEmpty ||
+        passwordController.text.trim().isEmpty) {
+      setState(() {
+        errorMessage = 'Name, email, and password are required.';
+      });
+      return;
+    }
+
+    if (passwordController.text.trim().length < 6) {
+      setState(() {
+        errorMessage = 'Password must be at least 6 characters.';
+      });
+      return;
+    }
     setState(() {
       isLoading = true;
       errorMessage = '';
@@ -33,6 +48,11 @@ class _RegisterScreenState extends State<RegisterScreen > {
       );
 
       if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account created successfully. Please login.'),
+        ),
+      );
 
       Navigator.pushReplacement(
         context,
@@ -110,6 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen > {
                     style: const TextStyle(color: Colors.red),
                   ),
                 const SizedBox(height: 16),
+
                 FilledButton(
                   onPressed: isLoading ? null : register,
                   style: FilledButton.styleFrom(
