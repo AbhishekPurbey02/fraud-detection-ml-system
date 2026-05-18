@@ -114,7 +114,7 @@ class _ManualInputTabState extends State<ManualInputTab> {
     });
 
     try {
-      final result = await apiService.predictTransaction(features);
+      final result = await apiService.predictTransaction(features, source: 'Manual Input');
 
       setState(() {
         predictionLabel = result['result'];

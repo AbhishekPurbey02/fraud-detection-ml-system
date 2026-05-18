@@ -53,7 +53,7 @@ class _PredictionScreenState extends State<PredictionScreen> {
     });
 
     try {
-      final result = await apiService.predictTransaction(selectedFeatures!);
+      final result = await apiService.predictTransaction(selectedFeatures!, source: selectedSample,);
 
       setState(() {
         predictionLabel = result["result"];

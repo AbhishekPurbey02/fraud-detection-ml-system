@@ -5,12 +5,12 @@ import '../models/prediction_record.dart';
 class FraudApiService {
   final String baseUrl = 'http://127.0.0.1:5000';
 
-  Future<Map<String, dynamic>> predictTransaction(List<double> features) async {
+  Future<Map<String, dynamic>> predictTransaction(List<double> features, {String source = 'API Prediction'}) async {
     final url = Uri.parse('$baseUrl/predict');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'features': features}),
+      body: jsonEncode({'features': features,'source': source,}),
     );
 
     final data = jsonDecode(response.body);

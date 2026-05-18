@@ -9,6 +9,7 @@ from datetime import datetime
 app = Flask(__name__)
 CORS(app)
 
+init_db()
 from database import (
     init_db,
     insert_prediction,
