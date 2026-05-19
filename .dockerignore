@@ -1,0 +1,14 @@
+.git
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+data
+notebooks
+
+flutter_app/fraud_detection_app/build
+flutter_app/fraud_detection_app/.dart_tool
+flutter_app/fraud_detection_app/.idea
+
+*.ipynb_checkpoints
