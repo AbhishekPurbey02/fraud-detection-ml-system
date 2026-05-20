@@ -1,0 +1,8 @@
+services:
+  backend:
+    build: .
+    container_name: fraud-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend/fraud_predictions.db:/app/backend/fraud_predictions.db
