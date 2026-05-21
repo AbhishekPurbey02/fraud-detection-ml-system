@@ -1,9 +1,7 @@
 import os
+from datetime import datetime
 import psycopg2
 from psycopg2.extras import RealDictCursor
-
-BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "fraud_predictions.db"
 
 def get_connection():
     return psycopg2.connect(
