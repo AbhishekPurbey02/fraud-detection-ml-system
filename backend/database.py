@@ -80,15 +80,16 @@ def get_predictions():
     cursor = connection.cursor()
 
     cursor.execute("""
-        SELECT id, source, result, risk_percentage, reviewed, created_at
+        SELECT *
         FROM predictions
         ORDER BY id DESC
     """)
 
-    rows = cursor.fetchall()
+    predictions = cursor.fetchall()
+
     connection.close()
 
-    return [dict(row) for row in rows]
+    return [dict(row) for row in predictions]
 
 
 def mark_prediction_reviewed(prediction_id):
@@ -97,8 +98,8 @@ def mark_prediction_reviewed(prediction_id):
 
     cursor.execute("""
         UPDATE predictions
-        SET reviewed = 1
-        WHERE id = ?
+        SET reviewed = TRUE
+        WHERE id = %s
     """, (prediction_id,))
 
     connection.commit()
@@ -149,16 +150,17 @@ def get_user_by_email(email):
     cursor = connection.cursor()
 
     cursor.execute("""
-        SELECT id, name, email, password_hash, role, created_at
+        SELECT *
         FROM users
-        WHERE email = ?
+        WHERE email = %s
     """, (email,))
 
-    row = cursor.fetchone()
+    user = cursor.fetchone()
+
     connection.close()
 
-    if row is None:
+    if user is None:
         return None
 
-    return dict(row)
+    return dict(user)
 
