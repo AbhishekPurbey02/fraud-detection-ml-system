@@ -1,8 +1,29 @@
 services:
+  postgres:
+    image: postgres:16
+    container_name: fraud-postgres
+    environment:
+      POSTGRES_DB: fraud_db
+      POSTGRES_USER: fraud_user
+      POSTGRES_PASSWORD: fraud_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   backend:
     build: .
     container_name: fraud-backend
     ports:
       - "5000:5000"
-    volumes:
-      - ./backend/fraud_predictions.db:/app/backend/fraud_predictions.db
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: fraud_db
+      DB_USER: fraud_user
+      DB_PASSWORD: fraud_password
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
