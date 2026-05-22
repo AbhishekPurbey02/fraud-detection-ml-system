@@ -43,7 +43,7 @@ def init_db():
     connection.commit()
     connection.close()
 
-def insert_prediction(prediction, result, fraud_probability, risk_percentage):
+def insert_prediction(source, prediction, result, fraud_probability, risk_percentage, created_at):
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -57,7 +57,7 @@ def insert_prediction(prediction, result, fraud_probability, risk_percentage):
             reviewed,
             created_at
         )
-        VALUES (%s, %s, %s, %s, %s, %s,%s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         RETURNING id
     """, (
         source,
@@ -66,7 +66,7 @@ def insert_prediction(prediction, result, fraud_probability, risk_percentage):
         fraud_probability,
         risk_percentage,
         False,
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        created_at,
     ))
 
     prediction_id = cursor.fetchone()["id"]
@@ -136,7 +136,6 @@ def create_user(name, email, password_hash, role,created_at):
         password_hash,
         role,
         created_at,
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     ))
 
     user_id = cursor.fetchone()["id"]
