@@ -21,6 +21,7 @@ def init_db():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS predictions (
         id SERIAL PRIMARY KEY,
+        source TEXT NOT NULL,
         prediction INTEGER NOT NULL,
         result TEXT NOT NULL,
         fraud_probability REAL NOT NULL,
@@ -48,6 +49,7 @@ def insert_prediction(prediction, result, fraud_probability, risk_percentage):
 
     cursor.execute("""
         INSERT INTO predictions (
+            source,
             prediction,
             result,
             fraud_probability,
@@ -55,9 +57,10 @@ def insert_prediction(prediction, result, fraud_probability, risk_percentage):
             reviewed,
             created_at
         )
-        VALUES (%s, %s, %s, %s, %s, %s)
+        VALUES (%s, %s, %s, %s, %s, %s,%s)
         RETURNING id
     """, (
+        source,
         prediction,
         result,
         fraud_probability,
@@ -113,7 +116,7 @@ def clear_predictions():
     connection.commit()
     connection.close()
 
-def create_user(name, email, password_hash, role="analyst"):
+def create_user(name, email, password_hash, role,created_at):
     connection = get_connection()
     cursor = connection.cursor()
 
@@ -132,6 +135,7 @@ def create_user(name, email, password_hash, role="analyst"):
         email,
         password_hash,
         role,
+        created_at,
         datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     ))
 
