@@ -100,8 +100,10 @@ def predict():
 
     prediction_id = insert_prediction(
         source=source,
+        prediction=int(prediction),
         result=result,
         risk_percentage=round(float(fraud_probability) * 100, 2),
+        fraud_probability=round(float(fraud_probability), 4),
         created_at=created_at
     )
 
