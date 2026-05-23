@@ -259,6 +259,12 @@ The Flutter app communicates with the Flask API running on:
 http://127.0.0.1:5000
 ```
 
+For production builds, pass the deployed backend URL at build time:
+
+```powershell
+flutter build web --dart-define=API_BASE_URL=https://your-backend-url.com
+```
+
 ## PostgreSQL Setup
 
 PostgreSQL runs through Docker Compose.
@@ -274,6 +280,37 @@ Port: 5432
 ```
 
 The backend receives these values through environment variables in `docker-compose.yml`.
+
+## Production Deployment Notes
+
+The backend Docker image runs Flask through Gunicorn:
+
+```text
+gunicorn --bind 0.0.0.0:${PORT:-5000} --workers ${WEB_CONCURRENCY:-2} app:app
+```
+
+This is more suitable for cloud deployment than Flask's local development server.
+
+Recommended deployment setup:
+
+1. Deploy PostgreSQL using a managed cloud database or a Docker Compose service.
+2. Deploy the backend container with environment variables from `.env.example`.
+3. Build the Flutter web app with the deployed backend URL.
+4. Host Flutter web on a static hosting platform.
+5. Update CORS settings if the frontend and backend use different domains.
+
+Important production environment variables:
+
+```text
+DB_HOST
+DB_PORT
+DB_NAME
+DB_USER
+DB_PASSWORD
+PORT
+FLASK_DEBUG
+WEB_CONCURRENCY
+```
 
 ## Security Notes
 
@@ -310,4 +347,3 @@ Planned improvements:
 ## Project Summary
 
 Built an end-to-end AI fraud detection platform using Random Forest, Flask, PostgreSQL, Docker, and Flutter. The system supports user authentication, real-time fraud prediction, persistent prediction history, dashboard analytics, and fraud alert review through a full-stack machine learning architecture.
-
