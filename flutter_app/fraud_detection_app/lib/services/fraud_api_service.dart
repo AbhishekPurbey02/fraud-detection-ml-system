@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:fraud_detection_app/config/api_config.dart';
 import 'package:http/http.dart' as http;
 import '../models/prediction_record.dart';
 
 class FraudApiService {
-  final String baseUrl = 'http://127.0.0.1:5000';
+  final String baseUrl = ApiConfig.baseUrl;
 
   Future<Map<String, dynamic>> predictTransaction(
     List<double> features, {
