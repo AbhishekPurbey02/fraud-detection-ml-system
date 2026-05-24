@@ -4,6 +4,12 @@ An end-to-end machine learning system for detecting fraudulent credit card trans
 
 This project was built as a full-stack AI product, not just a notebook experiment.
 
+## Live Demo
+
+Frontend App: https://ai-fraud-detection-platform.netlify.app/
+
+Backend API: https://fraud-backend-5x3y.onrender.com
+
 ## Project Overview
 
 Credit card fraud detection is a highly imbalanced classification problem where fraudulent transactions are rare but costly. This system uses machine learning to classify transactions as safe or fraudulent and exposes the model through a real application workflow.
