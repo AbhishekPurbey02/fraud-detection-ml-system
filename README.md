@@ -287,6 +287,20 @@ Port: 5432
 
 The backend receives these values through environment variables in `docker-compose.yml`.
 
+## Deployment
+
+Frontend App: ...
+Backend API: ...
+Health Check: ...
+
+The project is deployed using:
+- Frontend: Netlify
+- Backend: Render
+- Database: Render PostgreSQL
+- Backend runtime: Docker + Gunicorn
+
+Note: The backend is hosted on Render free tier, so the first request may take a few seconds because of cold start.
+
 ## Production Deployment Notes
 
 The backend Docker image runs Flask through Gunicorn:
