@@ -330,20 +330,18 @@ WEB_CONCURRENCY
 Completed:
 
 - ML model training
-- Model and scaler saving
-- Flask API backend
-- PostgreSQL integration
+- Flask backend API
+- PostgreSQL database integration
 - Dockerized backend
 - Flutter frontend
-- Register and login screens
-- Prediction screen
-- Manual input screen
-- Dashboard and alerts
+- Authentication
+- Prediction dashboard
+- Fraud alert review
+- Backend deployment on Render
+- Frontend deployment on Netlify
 
 Planned improvements:
 
-- Cloud deployment
-- JWT authentication
 - Role-based access control
 - Production environment variables
 - Batch CSV prediction
