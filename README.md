@@ -1,6 +1,6 @@
 # AI Credit Card Fraud Detection Platform
 
-An end-to-end machine learning system for detecting fraudulent credit card transactions. The project combines a trained fraud detection model, a Flask REST API, PostgreSQL storage, Dockerized backend infrastructure, and a Flutter web application for analysts to test transactions, review alerts, and monitor prediction history.
+An end-to-end machine learning system for detecting fraudulent credit card transactions. The project combines a trained fraud detection model, a Flask REST API, PostgreSQL storage, Dockerized backend infrastructure, and a Flutter web application for analysts to test transactions, review alerts and monitor prediction history.
 
 This project was built as a full-stack AI product, not just a notebook experiment.
 
