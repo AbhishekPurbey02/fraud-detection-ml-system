@@ -298,7 +298,7 @@ The project is deployed using:
 - Database: Render PostgreSQL
 - Backend runtime: Docker + Gunicorn
 
-Note: The backend is hosted on Render free tier, so the first request may take a few seconds because of cold start.
+Note: The backend is hosted on Render free tier so the first request may take a few seconds because of cold start.
 
 ## Production Deployment Notes
 
