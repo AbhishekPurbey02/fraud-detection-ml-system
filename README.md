@@ -363,4 +363,4 @@ Planned improvements:
 
 ## Project Summary
 
-Built an end-to-end AI fraud detection platform using Random Forest, Flask, PostgreSQL, Docker, and Flutter. The system supports user authentication, real-time fraud prediction, persistent prediction history, dashboard analytics and fraud alert review through a full-stack machine learning architecture.
+Built an end-to-end AI fraud detection platform using Random Forest, Flask, PostgreSQL, Docker and Flutter. The system supports user authentication, real-time fraud prediction, persistent prediction history, dashboard analytics and fraud alert review through a full-stack machine learning architecture.
