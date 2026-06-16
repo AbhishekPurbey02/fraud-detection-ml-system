@@ -12,7 +12,7 @@ Backend API: https://fraud-backend-5x3y.onrender.com
 
 ## Project Overview
 
-Credit card fraud detection is a highly imbalanced classification problem where fraudulent transactions are rare but costly. This system uses machine learning to classify transactions as safe or fraudulent and exposes the model through a real application workflow.
+Credit card fraud detection is a highly imbalanced classification problem where fraudulent transactions are rare but costly. This system uses machine learning to classify transactions as safe or fraudulent, and exposes the model through a real application workflow.
 
 The platform supports:
 
