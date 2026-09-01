@@ -4,6 +4,87 @@ An end-to-end machine learning system for detecting fraudulent credit card trans
 
 This project was built as a full-stack AI product not just a notebook experiment.
 
+## Research Paper
+
+**An End-to-End Explainable Machine Learning Framework for Credit Card Fraud Detection with Deployment Performance Evaluation**
+
+**Author:** Abhishek Kumar Purbey  
+**Affiliation:** Independent Researcher  
+**Status:** Manuscript submitted to ACIIDS 2027 (Springer LNCS/LNAI)
+
+This repository contains the implementation and experimental artifacts
+associated with the research manuscript. The study investigates credit card
+fraud detection from an end-to-end perspective, combining machine learning
+model evaluation, class imbalance handling, explainable AI, API deployment,
+and deployment performance evaluation.
+
+The research implementation includes:
+
+- SMOTE-based class imbalance handling
+- Comparative evaluation of Logistic Regression, Random Forest, and XGBoost
+- Precision, Recall, F1-score, and ROC-AUC evaluation
+- Global SHAP feature-importance analysis
+- Local SHAP waterfall explanation
+- Flask REST API deployment
+- PostgreSQL persistence
+- Docker-based backend deployment
+- API latency evaluation
+- 500-request load testing
+- CPU and memory utilization evaluation
+
+## Key Experimental Results
+
+### Model Performance
+
+| Model | Accuracy | Precision | Recall | F1 | ROC-AUC |
+|---|---:|---:|---:|---:|---:|
+| Logistic Regression | 0.9746 | 0.0589 | 0.9184 | 0.1106 | 0.9712 |
+| Random Forest | 0.9995 | 0.8602 | 0.8163 | 0.8377 | 0.9703 |
+| XGBoost | 0.9969 | 0.3414 | 0.8673 | 0.4899 | 0.9767 |
+
+Random Forest provided the most balanced precision-recall performance among
+the evaluated models and was selected for the deployed fraud detection
+pipeline.
+
+## Explainability Analysis
+
+SHAP (SHapley Additive exPlanations) was used to analyze the selected
+Random Forest model at both global and local levels.
+
+### Global Explanation
+
+The global SHAP analysis identified the following features as the most
+influential based on mean absolute SHAP contribution:
+
+- Feature 14
+- Feature 12
+- Feature 4
+- Feature 3
+- Feature 10
+
+![Global SHAP Analysis](results/Shap_global.png)
+
+### Local Explanation
+
+A representative SHAP waterfall explanation was used to examine how
+individual feature contributions combine for a specific transaction.
+
+![Local SHAP Explanation](results/shap_local.png)
+
+### Deployment Performance
+
+| Metric | Result |
+|---|---:|
+| Total Requests | 500 |
+| Successful Requests | 500 |
+| Failed Requests | 0 |
+| Execution Time | 26.51 s |
+| Throughput | 18.86 requests/s |
+| Average CPU Usage | 0.086978% |
+| Peak CPU Usage | 0.788200% |
+| Average Memory Usage | 330.87 MB |
+| Peak Memory Usage | 331.82 MB |
+
 ## Live Demo
 
 Frontend App: https://ai-fraud-detection-platform.netlify.app/
